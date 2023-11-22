@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Basic Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <button onclick="clearDisplay()">C</button>
+    <button onclick="appendToDisplay('7')">7</button>
+    <button onclick="appendToDisplay('8')">8</button>
+    <button onclick="appendToDisplay('9')">9</button>
+    <button onclick="operate('/')">/</button>
+    <button onclick="appendToDisplay('4')">4</button>
+    <button onclick="appendToDisplay('5')">5</button>
+    <button onclick="appendToDisplay('6')">6</button>
+    <button onclick="operate('*')">*</button>
+    <button onclick="appendToDisplay('1')">1</button>
+    <button onclick="appendToDisplay('2')">2</button>
+    <button onclick="appendToDisplay('3')">3</button>
+    <button onclick="operate('-')">-</button>
+    <button onclick="appendToDisplay('0')">0</button>
+    <button onclick="appendToDisplay('.')">.</button>
+    <button onclick="calculate()">=</button>
+    <button onclick="operate('+')">+</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+<style>
+.calculator {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 5px;
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+button {
+  padding: 10px;
+  font-size: 20px;
+}
+
+.display {
+  grid-column: 1 / span 4;
+  padding: 10px;
+  background-color: #f0f0f0;
+  text-align: right;
+  font-size: 24px;
+  border: 1px solid #ccc;
+}
+
+    </style>
+    <script>
+        let displayValue = '';
+let firstValue = null;
+let operator = null;
+let awaitingNextValue = false;
+
+function updateDisplay() {
+  const display = document.getElementById('display');
+  display.textContent = displayValue || '0';
+}
+
+function appendToDisplay(val) {
+  if (awaitingNextValue) {
+    displayValue = '';
+    awaitingNextValue = false;
+  }
+  displayValue += val;
+  updateDisplay();
+}
+
+function operate(op) {
+  if (operator !== null && !awaitingNextValue) {
+    calculate();
+  }
+  firstValue = parseFloat(displayValue);
+  operator = op;
+  awaitingNextValue = true;
+}
+
+function calculate() {
+  const secondValue = parseFloat(displayValue);
+  let result;
+
+  switch (operator) {
+    case '+':
+      result = firstValue + secondValue;
+      break;
+    case '-':
+      result = firstValue - secondValue;
+      break;
+    case '*':
+      result = firstValue * secondValue;
+      break;
+    case '/':
+      result = firstValue / secondValue;
+      break;
+    default:
+      return;
+  }
+
+  displayValue = result.toString();
+  firstValue = result;
+  operator = null;
+  awaitingNextValue = true;
+  updateDisplay();
+}
+
+function clearDisplay() {
+  displayValue = '';
+  firstValue = null;
+  operator = null;
+  awaitingNextValue = false;
+  updateDisplay();
+}
+
+updateDisplay();
+
+        </script>
+
+</html>
